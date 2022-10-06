@@ -76,19 +76,19 @@ export default function App() {
         )}
         name='dofb'
       />
+
       {errors.dofb?.type == "pattern" && <Text style={{ color: 'red', fontSize: 15 }}>La fecha debe terner formato</Text>}
 
       <Controller
         control={control}
         rules={{
-          pattern: /^ (?= (?:.*\d))(?=.*[A-Z])(?=.*[a-z])(?=.*[.,*!?¿¡/#$%&])\S{8, 15}$/
-
-
+          required: true,
+          pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])([A-Za-z\d$@$!%*?&]|[^ ]){5,15}$/
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput style={styles.inputs}
             placeholder="Contraseña"
-            // secureTextEntry={true}
+            secureTextEntry={true}
             onChange={onChange}
             onBlur={onBlur}
             value={value}
@@ -96,17 +96,18 @@ export default function App() {
         )}
         name='password'
       />
-      {errors.password?.type == "pattern" && <Text style={{ color: 'red', fontSize: 15 }}>La contraseña es obligatoria, minimo 4 numeros, debe terner un caracter especial,letra mayuscula, minuscula y un numero</Text>}
+      {errors.password?.type == "required" && <Text style={{ color: 'red', fontSize: 15 }}>La contraseña es obligatoria</Text>}
+      {errors.password?.type == "pattern" && <Text style={{ color: 'red', fontSize: 15 }}>Debe tener numeros,letra minuscula y mayuscula,punto y caracter especial, sin espacios, maximo 15 caracteres</Text>}
 
       <Controller
         control={control}
         rules={{
-          pattern: /^ ([0 - 9]{1, 10}(\.[0-9]{1, 2})?)$/
+          pattern: /^[0-9,$]*$/
 
         }}
         render={({ field: { onChange, onBlur, value } }) => (
           <TextInput style={styles.inputs}
-            placeholder="Contraseña"
+            placeholder="Salario"
             // secureTextEntry={true}
             onChange={onChange}
             onBlur={onBlur}
@@ -115,7 +116,7 @@ export default function App() {
         )}
         name='salary'
       />
-      {errors.password?.type == "salary" && <Text style={{ color: 'red', fontSize: 15 }}>La contraseña es obligatoria, minimo 4 numeros, debe terner un caracter especial,letra mayuscula, minuscula y un numero</Text>}
+      {errors.salary?.type == "pattern" && <Text style={{ color: 'red', fontSize: 15 }}>El salario debe ser solo numeros</Text>}
 
       <TouchableOpacity
         style={{ backgroundColor: 'green', padding: 10, borderRadius: 10, marginTop: 10, width: 100 }}
