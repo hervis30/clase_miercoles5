@@ -1,7 +1,10 @@
 import { StyleSheet, Text, View, TextInput, Switch, Picker, TouchableOpacity } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
+import { useState } from 'react';
 
 export default function App() {
+  const [rol, setRol] = useState('adm');
+  const [isActive, setIsActive] = useState(false);
   const { control, handleSubmit, formState: { errors } } = useForm({
     defaultValues: {
       fullName: '',
@@ -12,7 +15,12 @@ export default function App() {
       age: '',
     }
   });
-  const onSubmit = data => console.log(data);
+  const onSubmit = data => {
+    console.log(data);
+    console.log(rol);
+    console.log(isActive)
+  }
+  const toggleSwitch = () => setIsActive(previousState => !previousState);
   return (
     <View style={styles.container}>
       <Controller
@@ -24,7 +32,10 @@ export default function App() {
           pattern: /^[A-Za-zÁÉÍÓÚáéíóúñÑ ]+$/g
         }}
         render={({ field: { onChange, onBlur, value } }) => (
-          <TextInput style={styles.inputs}
+          <TextInput style={[styles.inputs, {
+            borderColor: errors.fullName?.type == 'required' || errors.fullName?.type == 'pattern' || errors.fullName?.
+              type == 'maxLength' || errors.fullName?.type == 'minLength' ? 'red' : 'green'
+          }]}
             placeholder="Nombre completo"
             onChange={onChange}
             onBlur={onBlur}
@@ -118,6 +129,26 @@ export default function App() {
       />
       {errors.salary?.type == "pattern" && <Text style={{ color: 'red', fontSize: 15 }}>El salario debe ser solo numeros</Text>}
 
+      <Picker
+        selectedValue={rol}
+        style={{ height: 30, width: 150 }}
+        onValueChange={(itemValue, itemIndex) => setRol(itemValue)}
+      >
+
+        <Picker.Item label="Administrador" value="adm" />
+        <Picker.Item label="Usuario  Final" value="user" />
+
+      </Picker>
+      <View style={{ flexDirection: 'row', true: 'gray' }}>
+        <Text>Esta activo?</Text>
+        <Switch
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor={isActive ? "pink" : "red"}
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={isActive}
+        />
+      </View>
       <TouchableOpacity
         style={{ backgroundColor: 'green', padding: 10, borderRadius: 10, marginTop: 10, width: 100 }}
         onPress={handleSubmit(onSubmit)}
